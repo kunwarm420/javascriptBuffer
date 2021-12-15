@@ -4,6 +4,7 @@ const testlib = require( './testlib.js' );
 const dict={};//key and value pairs
 let toCheckKeys;//holds all the keys
 let count=0;//counts which offset the stream is at
+let buffer=[];//holds the two letters to be compared
 
 testlib.on( 'ready', function( patterns ) {
 	console.log( "Patterns:", patterns );//prints the pattern
@@ -18,14 +19,7 @@ testlib.on( 'ready', function( patterns ) {
 	testlib.runTests();
 } );
 
-//holds the current two letters
-let buffer=[];
 testlib.on( 'data', function( data ) {
-
-	if (testlib.on('reset', function))
-	{
-		console.log("Hello");
-	}
 	buffer.push(data);//add the data to buffer
 
 	//if buffer i>2, delete first index letter
@@ -33,7 +27,6 @@ testlib.on( 'data', function( data ) {
 		buffer.shift();
 	}
 
-	
 	//correct Length
 	if (buffer.length===2){
 		let twoWords=buffer[0]+buffer[1]; //String concatenation
@@ -53,8 +46,12 @@ testlib.on( 'data', function( data ) {
 	count++; //moving to the next letter
 } );
 
+testlib.on('reset', function(data)
+{
+	testlib.frequencyTable(dict);
+});
+
 testlib.on( 'end', function(data) {
-	console.log(dict);
 	testlib.frequencyTable(dict);
 });
 
