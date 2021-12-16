@@ -37,7 +37,7 @@ testlib.on( 'data', function( data ) {
 			{
 				let num=dict[element];//current element value
 				num++; //increment num by 1;
-				dict[element]=num;
+				dict[element]=num; //change the value of the num to +1
 
 				testlib.foundMatch(element, count);//testlib 2
 			}
@@ -46,11 +46,13 @@ testlib.on( 'data', function( data ) {
 	count++; //moving to the next letter
 } );
 
+//when a /n is called
 testlib.on('reset', function(data)
 {
 	testlib.frequencyTable(dict);
 });
 
+//end of the stream
 testlib.on( 'end', function(data) {
 	testlib.frequencyTable(dict);
 });
