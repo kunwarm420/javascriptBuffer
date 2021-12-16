@@ -1,10 +1,15 @@
 "use strict";
-
+const { arrayBuffer } = require('stream/consumers');
 const testlib = require( './testlib.js' );
+
+
 const dict={};//key and value pairs
-let toCheckKeys;//holds all the keys
+var toCheckKeys;//holds all the keys
 let count=0;//counts which offset the stream is at
-let buffer=[];//holds the two letters to be compared
+let buffer=[];//holds longestStrlength amount of
+let longestStrLength;//longest a string sequence can be
+
+
 
 testlib.on( 'ready', function( patterns ) {
 	console.log( "Patterns:", patterns );//prints the pattern
@@ -13,33 +18,73 @@ testlib.on( 'ready', function( patterns ) {
 	patterns.forEach(element => {
 		dict[element]=0;
 	});
+	toCheckKeys=Object.keys(dict); //holding the keys
 
-	toCheckKeys=Object.keys(dict);
-	console.log(dict);
+	//get the longest length string
+	longestStrLength=patterns.sort(function (a, b) { return b.length - a.length })[0];
+
+	testlib.frequencyTable(dict);//print table
 	testlib.runTests();
 } );
 
 testlib.on( 'data', function( data ) {
-	buffer.push(data);//add the data to buffer
+	//add data to buffer
+	buffer.push(data);
 
-	//if buffer i>2, delete first index letter
-	if (buffer.length>2){
+	//if current buffer is larger than the largest sequence
+	if (buffer.length>longestStrLength.length){
 		buffer.shift();
 	}
 
-	//correct Length
-	if (buffer.length===2){
-		let twoWords=buffer[0]+buffer[1]; //String concatenation
+	//is the same length as the largest sequence possible
+	if (buffer.length===longestStrLength.length){
 
-		//for each loop to check every element in the keyCheck array
+
+		//loop through each key 
 		toCheckKeys.forEach(element => {
-			if (element==twoWords)//check if the 2 letters match
-			{
-				let num=dict[element];//current element value
-				num++; //increment num by 1;
-				dict[element]=num; //change the value of the num to +1
+			
+			//get length of the current key
+			//and the number of letters to remove
+			let checkSize=element.length;
+			let sizeToRemove=longestStrLength.length-checkSize;
+			
+			//change buffer to str and then back to array
+			let comparingStr=buffer.toString();
+			comparingStr= comparingStr.split(',').join('');
+			comparingStr = comparingStr.split("");
+	
+			//remove starting unnecessary letters and then sort alphabetically
+			comparingStr.splice(element.length, sizeToRemove);
+			comparingStr.sort();
+	
 
-				testlib.foundMatch(element, count);//testlib 2
+			let finalStr=""; //finally changing to str which we can compare
+			comparingStr.forEach(element => {
+				finalStr=finalStr+element;
+			});
+
+			//do the same thing for the elements
+			let comparingKey=element.toString();
+			comparingKey= comparingKey.split(',').join('');
+			comparingKey = comparingKey.split("");
+	
+			comparingKey.splice(element.length, sizeToRemove);
+			comparingKey.sort();
+	
+			let finalKey=""; //finally changing to str which we can compare
+			comparingKey.forEach(element => {
+				finalKey=finalKey+element;
+			});
+
+			console.log(element, finalKey, finalStr);
+
+			if (finalKey===finalStr)//check if the 2 words match
+			{
+				let num=dict[element];//get current key element value
+				num++; //increment that num by 1;
+				dict[element]=num; //set the value of num
+			
+				testlib.foundMatch(element, count);//if found print
 			}
 		});
 	}
@@ -57,8 +102,5 @@ testlib.on( 'end', function(data) {
 	testlib.frequencyTable(dict);
 });
 
-//sort the letters in ascending order and check
 
-
-testlib.setup( 1 ); // Runs test 1 (task1.data and task1.seq)
-
+testlib.setup(3); // Runs test 1 (task1.data and task1.seq)
