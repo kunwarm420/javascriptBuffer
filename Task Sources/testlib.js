@@ -3,6 +3,7 @@
 const fs = require( 'fs' );
 let interval = 25;
 let input_buffer = [];
+
 let hooks = {
 	ready: noop,
 	data: noop,
