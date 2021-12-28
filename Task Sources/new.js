@@ -46,7 +46,7 @@ testlib.on( 'ready', function( patterns ) {
 
 testlib.on( 'data', function( data ) {
 	buffer.push(data);
-    buffer=process.checkBuffer(buffer);
+    buffer=checkBuffer(buffer);
     /**
      * var is an array
      * check[0] contains (0 or 1)
@@ -55,7 +55,7 @@ testlib.on( 'data', function( data ) {
      * check[1] contains buffer
      * check[2] contains key
      */
-    var check=compareBuffer(buffer);
+    var check=process.compareBuffer(buffer, sequenceKeys);
     if (check[0]==1){
         process.printMatch(buffer, count); //match is found so repeat function for next buffer
     }
@@ -86,7 +86,31 @@ testlib.on( 'data', function( data ) {
 	count++; //moving to the next letter
 });
 
-
+ 
+ /**
+  * @param {reset count when starting and remove letter} buffer 
+  * @returns array containing 1 item or 3 items
+  */
+var checkBuffer=function(buffer)
+ {
+     /**
+     *ONLY for when the program starts
+     *buffer can be < largestString
+     */
+     if (buffer.length<longestString.length){
+         console.log("count resetted");
+         count=0;
+     }
+ 
+     /**
+     *if buffer>largest possibe string
+     *remove a starting letter
+     */
+     if (buffer.length>longestString.length){
+         buffer.shift();
+     }
+     return buffer;
+ }
 
 
 testlib.setup(1); // Runs test 1 (task1.data and task1.seq)
