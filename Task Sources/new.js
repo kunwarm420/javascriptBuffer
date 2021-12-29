@@ -55,33 +55,47 @@ testlib.on( 'data', function( data ) {
      * check[1] contains buffer
      * check[2] contains key
      */
-    var check=process.compareBuffer(buffer, sequenceKeys);
-    if (check[0]==1){
-        process.printMatch(buffer, count); //match is found so repeat function for next buffer
-    }
-    else{
-        /**
-        * check where the buffer element and key are different
-        * check if the different buffer element is a key from nucleo table
-        * if it is, create a new var and hold the buffer element with the swapped key letter
-        * repeat until done with all letters
-        * compare buffer and key to see if they match
-        * if matched, do testlib.foundmatch, else function restarts
-        */
+    if (buffer.length===longestString.length){
+        var check=process.compareBuffer(buffer, sequenceKeys);
+        if (check[0]==1){
+            process.printMatch(buffer, count); //match is found so repeat function for next buffer
+        }
+        else{
+            /**
+            * check where the buffer element and key are different
+            * check if the different buffer element is a key from nucleo table
+            * if it is, create a new var and hold the buffer element with the swapped key letter
+            * repeat until done with all letters
+            * compare buffer and key to see if they match
+            * if matched, do testlib.foundmatch, else function restarts
+            */
+    
+         
+            //console.log("Buffer", buffer);
+            let lettersToFix=[];
+            sequenceKeys.forEach(sequenceElement => {
+                var tempBuffer=buffer.slice();//clone buffer
+                var tempSequence=sequenceElement.split(''); //turn sequence to array
 
-  
-        let lettersToFix=[];
-        sequenceKeys.forEach(sequenceElement => {
-            var tempBuffer=buffer.slice();//clone buffer
-            console.log("BEFORE", buffer, tempBuffer, sequenceElement,lettersToFix);
-            tempBuffer.length=sequenceElement.length;//set clone to size of current sequence to compare
-            let letterPosition=buffer.indexOf(tempBuffer);
+                /**
+                 * buffer could be 4 letters and sequence could be 2
+                 * meaning we only needed to compare starting 2 letter of buffer
+                 * so we remove the letters from array                
+                 */
+                var bufferMinusSequence=tempBuffer.length-tempSequence.length;
+                if(bufferMinusSequence!==0){
+                    tempBuffer.pop(bufferMinusSequence);
+                }
 
-            console.log(tempBuffer, sequenceElement,lettersToFix);
-            if (tempBuffer[letterPosition]!==sequenceKeys[letterPosition]){
-                lettersToFix.push(tempBuffer[letterPosition]);
-                console.log("Different", tempBuffer, sequenceElement,lettersToFix);
-            }});
+                tempBuffer.forEach(bufferElement => {
+                    let letterPosition=tempBuffer.indexOf(bufferElement);
+                    if (tempBuffer[letterPosition]!==tempSequence[letterPosition]){
+                        lettersToFix.push(tempBuffer[letterPosition]);
+                    }
+                });
+            });
+            console.log(buffer, lettersToFix, buffer);
+        }
     }
 	count++; //moving to the next letter
 });
@@ -98,7 +112,6 @@ var checkBuffer=function(buffer)
      *buffer can be < largestString
      */
      if (buffer.length<longestString.length){
-         console.log("count resetted");
          count=0;
      }
  

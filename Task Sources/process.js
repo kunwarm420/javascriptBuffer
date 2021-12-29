@@ -17,16 +17,18 @@ const testlib = require( './testlib.js' );
   */
   module.exports.compareBuffer=function(buffer, sequenceKeys)
  {
-     //buffer could be 4 letters
-     //and the key could be 3
-     //but hte starting 3 can mathc
+     //key could be 4 letters
+     //and the buffer could be 3
+     //so the starting 4 can still match
      var combo=[];
      sequenceKeys.forEach(element => {
          //shorten buffer to length sequence
-         buffer.length=element.length;
-         if (buffer.join("")===element){
+        
+         var tempBuffer=buffer.slice();
+         tempBuffer.shift(element.length);
+         if (tempBuffer.join("")===element){
              //end loop as buffer and key match
-             combo.push(1, buffer, element);
+             combo.push(1, tempBuffer, element);
              return combo;
          }
      });
