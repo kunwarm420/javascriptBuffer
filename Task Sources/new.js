@@ -67,13 +67,13 @@ testlib.on( 'data', function( data ) {
             }
     
         }
+        count++;
     }
-	count++; //moving to the next letter
 });
 
  
  /**
-  * @param {reset count when starting and remove letter} buffer 
+  * @param {current word Stream buffer} buffer 
   * @returns array containing 1 item or 3 items
   */
 var checkBuffer=function(buffer)

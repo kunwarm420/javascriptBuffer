@@ -18,7 +18,7 @@ const testlib = require( './testlib.js' );
   module.exports.compareBuffer=function(buffer, sequenceKeys)
  {
      var combo=[];
-     sequenceKeys.every(element => {
+     sequenceKeys.foreach(element => {
         /**
         * buffer can be 3 char ("aaa")
         * sequence can be 2 char("aa")

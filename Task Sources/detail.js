@@ -1,3 +1,5 @@
+const { start } = require("repl");
+
 const arr1 = [1, 2, 3];
 const arr2 = [1, 3, 3];
 const values = ["first", "second", "third", "fourth", "fifth"];
@@ -48,22 +50,27 @@ var nucleoTable=[
 const table=nucleoTable.filter(nucelo=> (nucelo.id==="R" && nucelo.swap.indexOf("A")!=-1));
 
 
-fromBuffer=['R', 'M'];
+fromBuffer=['R', 'A'];
 findElement=['A', 'A'];
 let tableLengthCheck=0;
-fromBuffer.forEach((element, index) => {
-    
-    var table=nucleoTable.filter(nucelo=> (nucelo.id===element && nucelo.swap.indexOf(findElement[index])!=-1));
-    console.log("new", table, element, findElement[index]);
-    if(table.length!==0){ //if found
-        tableLengthCheck++;
-    }
 
-});
+let starting=function startup(){
+    let start=fromBuffer.forEach((element, index) => {
+        var table=nucleoTable.filter(nucelo=> (nucelo.id===element && nucelo.swap.indexOf(findElement[index])!=-1));
+        console.log("new", table, element, findElement[index]);
+        if(table.length!==0){ //if found
+            tableLengthCheck++;
+            return 1;
+        }
+    });
 
-
-if(tableLengthCheck===fromBuffer.length){
-    //console.log(tableLengthCheck, "Buffer", fromBuffer, "Sequence", findElement);
-    console.log(tableLengthCheck); 
-    return 1;
 }
+
+
+let buffer=['A', 'A'];
+console.log(buffer.join(""));
+// if(tableLengthCheck===fromBuffer.length){
+//     //console.log(tableLengthCheck, "Buffer", fromBuffer, "Sequence", findElement);
+//     console.log(tableLengthCheck); 
+//     return 1;
+// }
